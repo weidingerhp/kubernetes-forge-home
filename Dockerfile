@@ -47,7 +47,7 @@ COPY scripts/start.sh /opt/minecraft
 # -----------------------------
 # copy jar from prev build-step
 # -----------------------------
-COPY forge-server.jar /opt/minecraft/forge-server.jar
+COPY server /opt/minecraft/server
 
 # ----------------
 # default heap size
