@@ -8,8 +8,8 @@ jobs:
   multi:
     runs-on: ubuntu-latest
     env: 
-      VERSION: 1.16.4 
-      FORGE_VERSION: 35.1.4
+      VERSION: 1.14.4
+      FORGE_VERSION: 28.2.0
     steps:
       - name: Checkout
         uses: actions/checkout@v2
