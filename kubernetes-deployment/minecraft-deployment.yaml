@@ -1,0 +1,65 @@
+# docker run -d -it -v /path/on/host:/data -e EULA=TRUE -p 25565:25565 --name mc itzg/minecraft-server
+# using spigot:
+# docker run -d -it -v /path/on/host:/mnt/minecraft -e EULA=TRUE -p 25565:25565 --name mc marcermarc/spigot
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minecraft-forge1-server
+  namespace: minecraft
+  labels:
+    app: minecraft-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minecraft-forge1-server
+  template:
+    metadata:
+      labels:
+        app: minecraft-forge1-server
+    spec:
+      volumes:
+      - name: minecraft-data-nfs
+        persistentVolumeClaim:
+          claimName: minecraft-data-nfs-pvc
+      containers:
+      - name: minecraft-forge-server
+        image: hapewe/forge:1.14.4
+#        image: busybox
+        resources:
+          limits:
+            memory: "2.5Gi"
+            cpu: "2"
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+        env:
+          - name: HEAP
+            value: '2G'
+        ports:
+        - containerPort: 25565
+          name: minecraft-tcp
+          protocol: TCP
+        - containerPort: 25565
+          name: minecraft-udp
+          protocol: UDP
+        volumeMounts:
+          - name: minecraft-data-nfs
+            mountPath:  /mnt/minecraft
+            subPath: forge1
+        livenessProbe:
+          initialDelaySeconds: 420
+          periodSeconds: 20
+          tcpSocket:
+            port: 25565
+            
+# not needed any more - current image can run on amd64, arm64 and armv7 nodes
+#      affinity:
+#        nodeAffinity:
+#          requiredDuringSchedulingIgnoredDuringExecution:
+#            nodeSelectorTerms:
+#            - matchExpressions:
+#               - key: kubernetes.io/arch
+#                 operator: In
+#                 values:
+#                 - amd64
