@@ -8,8 +8,8 @@ jobs:
   multi:
     runs-on: ubuntu-latest
     env: 
-      VERSION: 1.16.4
-      FORGE_VERSION: 35.1.4
+      VERSION: 1.12.2-14
+      FORGE_VERSION: 23.5.2855
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -54,5 +54,5 @@ jobs:
           build-args: |
             VERSION=${{env.VERSION}}
           tags: |
-            hapewe/forge:latest
             hapewe/forge:${{env.VERSION}}
+#            hapewe/forge:latest
